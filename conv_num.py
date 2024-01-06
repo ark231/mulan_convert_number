@@ -37,9 +37,9 @@ def int_to_mulan(val: int) -> str:
     tmp_value = abs(val)
     while tmp_value != 0:
         remainder = tmp_value % 12
-        result = CONS[remainder] + "et" if sign > 0 else "ap" + result
+        result = CONS[remainder].lower() + ("et" if sign > 0 else "ap") + result
         tmp_value //= 12
-    result = result[0].lower() + result[1:]
+    result = result[0] + result[1:]
     return result
 
 
@@ -73,7 +73,18 @@ def fraction_to_num(val: Fraction, precision: int) -> str:
 
 
 def fraction_to_mulan(val: Fraction, precision: int) -> str:
-    pass
+    assert val != 0.0
+    sign = val / abs(val)
+    abs_val = abs(val)
+    result = ""
+    num_digs = 0
+    while abs_val > 0.0 and num_digs < precision:
+        dig = abs_val // Fraction(1, 12)
+        result += CONS[int(dig)].lower() + ("em" if sign > 0 else "an")
+        num_digs += 1
+        abs_val -= dig * Fraction(1, 12)
+        abs_val *= 12
+    return result
 
 
 def fraction_to_mudig(val: Fraction, precision: int, use_macron: bool) -> str:
